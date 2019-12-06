@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "app1-1": {
+      "commandName": "Project",
+      "commandLineArgs": "\"C:\\Users\\Steve\\Documents\\GitHub\\adventofcode2019\\1-1\\AdventOfCode2019.1\\app1-1\\Input.txt\""
+    }
+  }
+}
