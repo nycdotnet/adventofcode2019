@@ -12,22 +12,29 @@ func main() {
 
 	w1 := WirePath{}
 	w2 := WirePath{}
-	w1.SetPath(firstWirePlot)
-	w2.SetPath(secondWirePlot)
+	w1.FollowPath(firstWirePlot)
+	w2.FollowPath(secondWirePlot)
 	//fmt.Println(firstWire[0])
 	// for _, element := range firstWire {
 	// 	fmt.Println(element)
 	// }
 }
 
-// WirePath keeps track of a wire's path
+// WirePath keeps track of a wire's path starting from 0,0.
 type WirePath struct {
-	x, y, xMax, yMax, xMin, yMin int32
+	start, end, max, min Point32
+	path                 []Point32
 }
 
-// SetPath accepts a path represented as strings and follows it from current x,y
-func (r *WirePath) SetPath(path []string) {
-	fmt.Println(fmt.Sprintf("Starting coordinates: %d,%d", r.x, r.y))
+// Point32 represents and x and y coordinate in 2D space using int32
+type Point32 struct {
+	x, y int32
+}
+
+// FollowPath accepts a path represented as strings and follows it from current x,y
+func (r *WirePath) FollowPath(path []string) {
+
+	fmt.Println(fmt.Sprintf("Starting coordinates: %d,%d", r.end.x, r.end.y))
 	for _, element := range path {
 		direction := element[:1]
 		m, _ := strconv.ParseInt(element[1:len(element)], 10, 32)
@@ -35,34 +42,33 @@ func (r *WirePath) SetPath(path []string) {
 
 		if direction == "U" {
 			fmt.Println(fmt.Sprintf("Going up %d", magnitude))
-			r.y += magnitude
-			if r.y > r.yMax {
-				r.yMax = r.y
+			r.end.y += magnitude
+			if r.end.y > r.max.y {
+				r.max.y = r.end.y
 			}
 		} else if direction == "D" {
 			fmt.Println(fmt.Sprintf("Going down %d", magnitude))
-			r.y -= magnitude
-			if r.y < r.yMin {
-				r.yMin = r.y
+			r.end.y -= magnitude
+			if r.end.y < r.min.y {
+				r.min.y = r.end.y
 			}
 		} else if direction == "L" {
 			fmt.Println(fmt.Sprintf("Going left %d", magnitude))
-			r.x -= magnitude
-			if r.x < r.xMin {
-				r.xMin = r.x
+			r.end.x -= magnitude
+			if r.end.x < r.min.x {
+				r.min.x = r.end.x
 			}
 		} else if direction == "R" {
 			fmt.Println(fmt.Sprintf("Going right %d", magnitude))
-			r.x += magnitude
-			if r.x > r.xMax {
-				r.xMax = r.x
+			r.end.x += magnitude
+			if r.end.x > r.max.x {
+				r.max.x = r.end.x
 			}
 		} else {
 			panic(fmt.Sprintf("invalid direction %s", direction))
 		}
-		fmt.Println(magnitude)
-		fmt.Println(direction)
-		fmt.Println(fmt.Sprintf("%d,%d", r.x, r.y))
+
+		fmt.Println(fmt.Sprintf("%d,%d", r.end.x, r.end.y))
 	}
-	fmt.Println(fmt.Sprintf("Ending coordinates: %d,%d  [max x,y = %d,%d] [min x,y = %d,%d]", r.x, r.y, r.xMax, r.yMax, r.xMin, r.yMin))
+	fmt.Println(fmt.Sprintf("Ending coordinates: %d,%d  [max x,y = %d,%d] [min x,y = %d,%d]", r.end.x, r.end.y, r.max.x, r.max.y, r.min.x, r.min.y))
 }
